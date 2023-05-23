@@ -1,0 +1,2 @@
+# BanPlayerSheet
+プレイヤーのBan情報をスプレッドシートで管理する
