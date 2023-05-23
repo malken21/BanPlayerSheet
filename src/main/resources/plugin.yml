@@ -1,0 +1,4 @@
+name: PlayerSheet
+version: '${version}'
+main: marumasa.player_sheet.Minecraft
+api-version: 1.19
