@@ -1,4 +1,18 @@
-name: PlayerSheet
+name: BanPlayerSheet
 version: '${version}'
 main: marumasa.player_sheet.Minecraft
 api-version: 1.19
+commands:
+  sban:
+    description: Spreadsheet Ban
+    permission: player_sheet.sban
+  unsban:
+    description: Spreadsheet Unban
+    permission: player_sheet.unsban
+
+permissions:
+  player_sheet.*:
+    default: op
+    children:
+      player_sheet.sban: true
+      player_sheet.unsban: true

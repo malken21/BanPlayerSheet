@@ -6,6 +6,8 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 
 public class request {
+
+    // Getリクエスト 通信エラーなどで 接続できなかった場合は null を return する
     public static String get(String url) {
         try {
 

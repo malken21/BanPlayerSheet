@@ -1,45 +1,46 @@
 package marumasa.player_sheet;
 
-import org.bukkit.Bukkit;
+import com.google.gson.Gson;
+import marumasa.player_sheet.json.isBAN;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent.Result;
 
-import java.util.UUID;
-
 public class Events implements Listener {
 
     private final Config cfg;
-    private final Minecraft mc;
 
-    public Events(Config config, Minecraft minecraft) {
+    public Events(Config config) {
         cfg = config;
-        mc = minecraft;
     }
 
     @EventHandler
     public void onLogin(AsyncPlayerPreLoginEvent event) {
 
+        // ログインしたプレイヤーのUUID 取得
         final String LoginUUID = event.getUniqueId().toString();
 
-        Bukkit.getLogger().info(cfg.URL + "?type=isAllow&UUID=" + LoginUUID);
+        // スプレッドシートのBANリストに入っているか Getリクエストする
+        final String getJSON = request.get(cfg.URL + "?type=isBAN&UUID=" + LoginUUID);
 
-        final String getJSON = request.get(cfg.URL + "?type=isAllow&UUID=" + LoginUUID);
+        // もし 通信エラーなどでアクセスできなかったら
         if (getJSON == null) {
             event.disallow(Result.KICK_OTHER, cfg.ErrorMessage);
-            sendLogger(LoginUUID, cfg.ErrorMessage);
-        } else if (getJSON.contains("false")) {
-            event.disallow(Result.KICK_OTHER, cfg.KickMessage);
-            sendLogger(LoginUUID, cfg.KickMessage);
+            return;
         }
-    }
 
-    private String getIP(String data) {
-        return data.split("/")[1].split(":")[0];
-    }
+        // Gson を使って JSONを 変換
+        final isBAN getObject = new Gson().fromJson(getJSON, isBAN.class);
 
-    private void sendLogger(String LoginIP, String text) {
-        mc.getLogger().info("[" + LoginIP + "] " + text);
+
+        if (getObject.type.equals("Error"))
+            //もし Getリクエストから 送られてきた情報に エラーだと書かれていたら
+            event.disallow(Result.KICK_OTHER, cfg.ErrorMessage);
+
+        else if (getObject.result)
+            //もし Getリクエストから 送られてきた情報に BANリストに入っていると書かれていたら
+            event.disallow(Result.KICK_OTHER, cfg.KickMessage);
+
     }
 }
