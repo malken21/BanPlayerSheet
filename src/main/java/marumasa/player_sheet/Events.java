@@ -1,6 +1,7 @@
 package marumasa.player_sheet;
 
 import com.google.gson.Gson;
+import marumasa.player_sheet.config.Config;
 import marumasa.player_sheet.json.isBAN;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -26,7 +27,7 @@ public class Events implements Listener {
 
         // もし 通信エラーなどでアクセスできなかったら
         if (getJSON == null) {
-            event.disallow(Result.KICK_OTHER, cfg.ErrorMessage);
+            event.disallow(Result.KICK_OTHER, cfg.message.ErrorDatabase);
             return;
         }
 
@@ -36,11 +37,11 @@ public class Events implements Listener {
 
         if (getObject.type.equals("Error"))
             //もし Getリクエストから 送られてきた情報に エラーだと書かれていたら
-            event.disallow(Result.KICK_OTHER, cfg.ErrorMessage);
+            event.disallow(Result.KICK_OTHER, cfg.message.ErrorDatabase);
 
         else if (getObject.result)
             //もし Getリクエストから 送られてきた情報に BANリストに入っていると書かれていたら
-            event.disallow(Result.KICK_OTHER, cfg.KickMessage);
+            event.disallow(Result.KICK_OTHER, cfg.message.Kick);
 
     }
 }

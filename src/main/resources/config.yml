@@ -1,3 +1,6 @@
 URL: "Google Apps Script URL"
-KickMessage: "You are not allowed."
-ErrorMessage: "Unable to access database."
+
+Message:
+  BanReason: "Ban Reason"
+  Kick: "You are not allowed."
+  ErrorDatabase: "Unable to access database."
