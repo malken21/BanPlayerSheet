@@ -3,7 +3,6 @@ package marumasa.player_sheet;
 import com.google.gson.Gson;
 import marumasa.player_sheet.config.Config;
 import marumasa.player_sheet.json.response.isBAN;
-import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
