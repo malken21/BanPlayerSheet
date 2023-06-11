@@ -1,42 +1,63 @@
 package marumasa.player_sheet.command;
 
-import marumasa.player_sheet.config.Config;
 import marumasa.player_sheet.Minecraft;
+import marumasa.player_sheet.config.Config;
 import marumasa.player_sheet.request;
-import org.bukkit.Server;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import java.util.*;
+import java.util.logging.Logger;
 
 public class sBan implements CommandExecutor, TabCompleter {
     private final Config cfg;
-
     private final Minecraft mc;
-    private final Server server;
+    private final Logger logger;
 
     public sBan(Config config, Minecraft minecraft) {
         cfg = config;
         mc = minecraft;
-        server = minecraft.getServer();
+        logger = mc.getLogger();
     }
 
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-        final Player senderPlayer = (Player) sender;
 
-        final Player BanPlayer = server.getPlayer(args[0]);
+        if (args.length == 0) {
+            sender.sendMessage(cfg.message.sBan);
+            // 引数がひとつもない場合
+            return false;
+        }
 
-        final String BanReason = args[1];
+        final ArrayList<String> argList = new ArrayList<>(Arrays.asList(args));
 
-        final String getJSON = request.get(
-                cfg.URL + "?type=BAN&UUID=" + BanPlayer.getUniqueId() + "&Name=" + BanPlayer.getName() + "&BanReason=" + BanReason
-        );
+        // BANプレイヤーの名前
+        // remove を することで 同時に "argList" から BANプレイヤーの名前 を削除
+        final String BanPlayerName = argList.remove(0);
+
+        // BANプレイヤーのUUID
+        final String BanPlayerUUID = request.getPlayerUUID(BanPlayerName);
+
+        // プレイヤーが見つからなかった場合
+        if (BanPlayerUUID == null) {
+            sender.sendMessage(cfg.message.PlayerNotFound);
+            return false;
+        }
+
+        // BAN理由
+        final String BanReason = String.join(" ", argList);
+
+        logger.info("----------sBan----------");
+        logger.info("BanPlayerName: " + BanPlayerName);
+        logger.info("BanPlayerUUID: " + BanPlayerUUID);
+        logger.info("BanReason: " + BanReason);
+        logger.info("----------sBan----------");
+
+
 
         return true;
     }
@@ -44,13 +65,18 @@ public class sBan implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
-            final Collection<? extends Player> onlinePlayers = mc.getServer().getOnlinePlayers();
+            //BANしたいプレイヤー
+            final OfflinePlayer[] players = mc.getServer().getOfflinePlayers();
 
             List<String> PlayerStringList = new ArrayList<>();
-            for (Player player : onlinePlayers) PlayerStringList.add(player.getName());
+            for (OfflinePlayer player : players) PlayerStringList.add(player.getName());
 
             return PlayerStringList;
+        } else if (args.length == 2) {
+            //BAN理由
+            return Collections.singletonList(cfg.message.BanReason);
         } else {
+            //その他
             return null;
         }
     }

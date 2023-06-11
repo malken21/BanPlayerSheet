@@ -4,3 +4,6 @@ Message:
   BanReason: "Ban Reason"
   Kick: "You are not allowed."
   ErrorDatabase: "Unable to access database."
+  sBan: "/sban [PlayerName] [BanReason]"
+  unsBan: "/unsban [PlayerName]"
+  PlayerNotFound: "Player not found."

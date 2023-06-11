@@ -20,7 +20,7 @@ public final class Minecraft extends JavaPlugin {
         getCommand("sban").setExecutor(new sBan(config, this));
 
         // コマンド登録 unsban
-        getCommand("unsban").setExecutor(new unsBan(config));
+        getCommand("unsban").setExecutor(new unsBan(config, this));
     }
 
     @Override
