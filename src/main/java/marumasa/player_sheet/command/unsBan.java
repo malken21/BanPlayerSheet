@@ -1,7 +1,10 @@
 package marumasa.player_sheet.command;
 
+import com.google.gson.Gson;
 import marumasa.player_sheet.Minecraft;
 import marumasa.player_sheet.config.Config;
+import marumasa.player_sheet.json.Post;
+import marumasa.player_sheet.json.response.rmvBAN;
 import marumasa.player_sheet.request;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -18,6 +21,7 @@ public class unsBan implements CommandExecutor, TabCompleter {
     private final Config cfg;
     private final Minecraft mc;
     private final Logger logger;
+    private final Gson gson = new Gson();
 
     public unsBan(Config config, Minecraft minecraft) {
         cfg = config;
@@ -54,6 +58,28 @@ public class unsBan implements CommandExecutor, TabCompleter {
         logger.info("BanPlayerUUID: " + BanPlayerUUID);
         logger.info("----------unsBan----------");
 
+        final Post PostJSON = new Post(BanPlayerName, BanPlayerUUID, null, "rmvBAN");
+
+        // JSON 変換
+        String json = gson.toJson(PostJSON);
+
+        // Post通信で データを送信する
+        json = request.postJSON(cfg.URL, json);
+
+        if (json == null) {// null だったら
+            sender.sendMessage(cfg.message.ErrorDatabase);
+            return false;
+        }
+
+        // JSON 変換
+        final rmvBAN response = gson.fromJson(json, rmvBAN.class);
+
+        if (response.type.equals("Error")) {// エラーだったら
+            sender.sendMessage(cfg.message.ErrorDatabase);
+            return false;
+        } else if (response.type.equals("")) {
+
+        }
 
         return true;
     }
