@@ -3,9 +3,9 @@ package marumasa.player_sheet.command;
 import com.google.gson.Gson;
 import marumasa.player_sheet.Minecraft;
 import marumasa.player_sheet.config.Config;
-import marumasa.player_sheet.json.Post;
-import marumasa.player_sheet.json.response.addBAN;
+import marumasa.player_sheet.json.addBAN;
 import marumasa.player_sheet.request;
+import marumasa.player_sheet.run.sbanCommand;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -32,58 +32,7 @@ public class sBan implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-
-        if (args.length == 0) {
-            sender.sendMessage(cfg.message.sBan);
-            // 引数がひとつもない場合
-            return false;
-        }
-
-        final ArrayList<String> argList = new ArrayList<>(Arrays.asList(args));
-
-        // BANプレイヤーの名前
-        // remove を することで 同時に "argList" から BANプレイヤーの名前 を削除
-        final String BanPlayerName = argList.remove(0);
-
-        // BANプレイヤーのUUID
-        final String BanPlayerUUID = request.getPlayerUUID(BanPlayerName);
-
-        // プレイヤーが見つからなかった場合
-        if (BanPlayerUUID == null) {
-            sender.sendMessage(cfg.message.PlayerNotFound);
-            return false;
-        }
-
-        // BAN理由
-        final String BanReason = String.join(" ", argList);
-
-        logger.info("----------sBan----------");
-        logger.info("BanPlayerName: " + BanPlayerName);
-        logger.info("BanPlayerUUID: " + BanPlayerUUID);
-        logger.info("BanReason: " + BanReason);
-        logger.info("----------sBan----------");
-
-        final Post PostJSON = new Post(BanPlayerName, BanPlayerUUID, BanReason, "addBAN");
-
-        // JSON 変換
-        String json = gson.toJson(PostJSON);
-
-        // Post通信で データを送信する
-        json = request.postJSON(cfg.URL, json);
-
-        if (json == null)// null だったら
-            sender.sendMessage(cfg.message.ErrorDatabase);
-
-        // JSON 変換
-        final addBAN response = gson.fromJson(json, addBAN.class);
-
-        if (response.type.equals("Error")) {// エラーだったら
-            sender.sendMessage(cfg.message.ErrorDatabase);
-            return false;
-        } else if (response.type.equals("")) {
-
-        }
-
+        new sbanCommand(cfg, logger, sender, gson, args).start();
         return true;
     }
 

@@ -7,3 +7,8 @@ Message:
   sBan: "/sban [PlayerName] [BanReason]"
   unsBan: "/unsban [PlayerName]"
   PlayerNotFound: "Player not found."
+
+  addBAN: "Player has been banned."
+  rmvBAN: "Player has been unbanned."
+  alreadyBAN: "Player has already been banned."
+  notBAN: "Player has not been banned."
