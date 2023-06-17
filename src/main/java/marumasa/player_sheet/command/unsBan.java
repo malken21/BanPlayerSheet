@@ -3,9 +3,6 @@ package marumasa.player_sheet.command;
 import com.google.gson.Gson;
 import marumasa.player_sheet.Minecraft;
 import marumasa.player_sheet.config.Config;
-import marumasa.player_sheet.json.rmvBAN;
-import marumasa.player_sheet.request;
-import marumasa.player_sheet.run.sbanCommand;
 import marumasa.player_sheet.run.unsbanCommand;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
@@ -14,7 +11,6 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
