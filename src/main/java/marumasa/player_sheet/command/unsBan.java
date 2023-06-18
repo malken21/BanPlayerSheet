@@ -3,7 +3,7 @@ package marumasa.player_sheet.command;
 import com.google.gson.Gson;
 import marumasa.player_sheet.Minecraft;
 import marumasa.player_sheet.config.Config;
-import marumasa.player_sheet.run.unsbanCommand;
+import marumasa.player_sheet.main.unsbanCommand;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
