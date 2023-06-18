@@ -1,8 +1,7 @@
-package marumasa.player_sheet;
+package marumasa.player_sheet.request;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonParser;
-import org.bukkit.Bukkit;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -12,7 +11,7 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
-public class request {
+public class http {
 
 
     // Postリクエスト(JSON) 通信エラーなどで 接続できなかった場合は null を return する
@@ -46,7 +45,6 @@ public class request {
                 while ((responseLine = br.readLine()) != null) {
                     response.append(responseLine.trim());
                 }
-                Bukkit.getLogger().info(response.toString());
                 return response.toString();
             }
         } catch (IOException e) {

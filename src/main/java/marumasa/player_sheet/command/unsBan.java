@@ -3,7 +3,8 @@ package marumasa.player_sheet.command;
 import com.google.gson.Gson;
 import marumasa.player_sheet.Minecraft;
 import marumasa.player_sheet.config.Config;
-import marumasa.player_sheet.main.unsbanCommand;
+import marumasa.player_sheet.request.unsbanCommand;
+import marumasa.player_sheet.request.http;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
@@ -11,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
 
@@ -28,7 +30,34 @@ public class unsBan implements CommandExecutor, TabCompleter {
 
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-        new unsbanCommand(cfg, logger, sender, gson, args).start();
+
+        if (args.length == 0) {
+            // 引数がひとつもない場合
+            sender.sendMessage(cfg.message.unsBan);
+            return false;
+        }
+
+        final ArrayList<String> argList = new ArrayList<>(Arrays.asList(args));
+
+        // BANプレイヤーの名前
+        // remove を することで 同時に "argList" から BANプレイヤーの名前 を削除
+        final String BanPlayerName = argList.remove(0);
+
+        // BANプレイヤーのUUID
+        final String BanPlayerUUID = http.getPlayerUUID(BanPlayerName);
+
+        // プレイヤーが見つからなかった場合
+        if (BanPlayerUUID == null) {
+            sender.sendMessage(cfg.message.PlayerNotFound);
+            return false;
+        }
+
+        logger.info("----------unsBan----------");
+        logger.info("BanPlayerName: " + BanPlayerName);
+        logger.info("BanPlayerUUID: " + BanPlayerUUID);
+        logger.info("----------unsBan----------");
+
+        new unsbanCommand(BanPlayerUUID, cfg, sender, gson).start();
         return true;
     }
 

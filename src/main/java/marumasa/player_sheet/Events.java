@@ -3,6 +3,7 @@ package marumasa.player_sheet;
 import com.google.gson.Gson;
 import marumasa.player_sheet.config.Config;
 import marumasa.player_sheet.json.isBAN;
+import marumasa.player_sheet.request.http;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerPreLoginEvent;
@@ -24,7 +25,7 @@ public class Events implements Listener {
         final String LoginUUID = event.getUniqueId().toString();
 
         // スプレッドシートのBANリストに入っているか Getリクエストする
-        final String postJSON = request.postJSON(cfg.URL, gson.toJson(new isBAN.req(LoginUUID)));
+        final String postJSON = http.postJSON(cfg.URL, gson.toJson(new isBAN.req(LoginUUID)));
 
         // もし 通信エラーなどでアクセスできなかったら
         if (postJSON == null) {
