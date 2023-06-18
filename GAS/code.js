@@ -1,49 +1,48 @@
-function doGet(e) {
+//Postリクエスト
+function doPost(e) {
     try {
-        const type = e.parameter.type;
-        const uuid = e.parameter.UUID;
 
-        return ContentService.createTextOutput(JSON.stringify(main(type, uuid)));
+        // POST Bodyの内容を取得 & JSON化
+        const data = JSON.parse(e.postData.contents);
+        //JSONをコンソール出力
+        console.log(data);
+
+        return ContentService.createTextOutput(JSON.stringify(main(data)));
+
     } catch (err) {
+        //エラーの場合の処理
+
+        //エラー内容をコンソール出力
         console.log(err);
+        //レスポンス
         return ContentService.createTextOutput(JSON.stringify({ "type": "Error" }));
     }
 }
 
-function main(type, uuid) {
-    if (isParameter(type)) {
+function main(data) {
 
-        //-----メイン処理-----start
-        const spreadsheet = SpreadsheetApp.openByUrl(SpreadsheetURL);
-        const sheet = spreadsheet.getSheetByName(SheetName);
+    //-----メイン処理-----start
+    const spreadsheet = SpreadsheetApp.openByUrl(SpreadsheetURL);
+    const sheet = spreadsheet.getSheetByName(SheetName);
 
-        //リクエストパラメーター "type" が
-        switch (type) {
+    //"type" が
+    switch (data.type) {
 
-            //"isBAN" だったら プレイヤーがBANされているかどうか取得
-            case "isBAN":
-                return isBan(uuid, sheet);
+        //"isBAN" だったら プレイヤーがBANされているかどうか取得
+        case "isBAN":
+            return isBan(data, sheet);
 
-            //"addBAN"だったら BANプレイヤー追加
-            case "addBAN":
-                return addBan(uuid, sheet);
+        //"addBAN"だったら BANプレイヤー追加
+        case "addBAN":
+            return addBan(data, sheet);
 
-            //"rmvBAN"だったら BANプレイヤー削除
-            case "rmvBAN":
-                return rmvBan(uuid, sheet);
+        //"rmvBAN"だったら BANプレイヤー削除
+        case "rmvBAN":
+            return rmvBan(data, sheet);
 
-            //どれにも当てはまらなかったら エラー
-            default:
-                return { "type": "Error" };
-        }
-        //-----メイン処理-----end
-
-    } else {//エラー
-        return { "type": "Error" };
+        //どれにも当てはまらなかったら エラー
+        default:
+            return { "type": "Error" };
     }
-}
-
-//テスト用
-function test() {
-    console.log(main("isBAN", "069a79f4-44e9-4726-a5be-fca90e38aaf5"))
+    //-----メイン処理-----end
 }
