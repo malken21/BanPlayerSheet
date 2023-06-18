@@ -5,6 +5,7 @@ import marumasa.player_sheet.Minecraft;
 import marumasa.player_sheet.config.Config;
 import marumasa.player_sheet.run.sbanCommand;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.Server;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -20,16 +21,18 @@ public class sBan implements CommandExecutor, TabCompleter {
     private final Minecraft mc;
     private final Logger logger;
     private final Gson gson = new Gson();
+    private final Server server;
 
     public sBan(Config config, Minecraft minecraft) {
         cfg = config;
         mc = minecraft;
         logger = mc.getLogger();
+        server = mc.getServer();
     }
 
     @Override
     public boolean onCommand(final CommandSender sender, final Command command, final String label, final String[] args) {
-        new sbanCommand(cfg, logger, sender, gson, args).start();
+        new sbanCommand(cfg, logger, sender, gson, args, server).start();
         return true;
     }
 
