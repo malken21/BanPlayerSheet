@@ -13,10 +13,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.command.TabCompleter;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class sBan implements CommandExecutor, TabCompleter {
@@ -78,10 +75,19 @@ public class sBan implements CommandExecutor, TabCompleter {
     public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
         if (args.length == 1) {
             //BANしたいプレイヤー
-            final OfflinePlayer[] players = mc.getServer().getOfflinePlayers();
 
             List<String> PlayerStringList = new ArrayList<>();
-            for (OfflinePlayer player : players) PlayerStringList.add(player.getName());
+
+            //オフライン プレイヤー
+            final OfflinePlayer[] offlinePlayers = server.getOfflinePlayers();
+            for (OfflinePlayer player : offlinePlayers) PlayerStringList.add(player.getName());
+
+            //オンライン プレイヤー
+            final Collection<? extends Player> onlinePlayers = server.getOnlinePlayers();
+            for (Player player : onlinePlayers) {
+                final String name = player.getName();
+                if (!PlayerStringList.contains(name)) PlayerStringList.add(name);
+            }
 
             return PlayerStringList;
         } else if (args.length == 2) {
